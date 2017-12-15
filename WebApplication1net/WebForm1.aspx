@@ -15,7 +15,7 @@
 			<li><label>是否记住密码：</label><input type="text" name="t3" /></li>
 			<li><label>上传文件：</label><br />
 				
-				<iframe src="file.html"></iframe>	
+				<iframe src="file.html"  frameborder="no" border="0"></iframe>	
 				
 				
 

@@ -1,0 +1,37 @@
+﻿ //真正判断文件类型的关键函数
+        public static bool IsAllowedExtension(HttpPostedFile cfile)
+        {
+          
+                int fileLen = cfile.ContentLength;
+                byte[] imgArray = new byte[fileLen];
+                cfile.InputStream.Read(imgArray, 0, fileLen);
+                using (MemoryStream ms = new MemoryStream(imgArray))
+                {
+                    System.IO.BinaryReader br = new System.IO.BinaryReader(ms);
+                    string bx = "";
+                    byte buffer;
+                    try
+                    {
+                        buffer = br.ReadByte();
+                        bx = buffer.ToString();
+                        buffer = br.ReadByte();
+                        bx += buffer.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    br.Close();
+                    ms.Close();
+
+                if (bx == "255216" || bx == "7173" || bx == "13780")//说明：255216是jpg;7173是gif;6677是BMP,13780是PNG;7790是exe,8297是rar
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+
+            }
