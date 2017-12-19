@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WebApplication1net.WebForm1" %>
-
+<%@ Register TagPrefix="uc1" TagName="WebCtl1" Src="WebUserControl1.ascx" %> 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -22,6 +22,8 @@
 
 
 			</li>
+			<li>
+				<uc1:WebCtl1 id="WFC1" runat="server"></uc1:WebCtl1></li>
 			
 		</ul>
         <div>
