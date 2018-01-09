@@ -1,0 +1,52 @@
+﻿body {
+}
+/*水平居中：1*/
+.child {
+    width:200px;
+    margin:0 auto;
+}
+/*水平居中：2*/
+.parent {
+     text-align:center;
+}
+.child {
+    display:inline-block
+}
+/*垂直居中：1*/
+.parent{
+    display: table-cell;
+    vertical-align: middle;
+    height: 20px;
+}
+/*垂直居中：2*/
+.parent{
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 20px;
+}
+/*水平垂直全居中：1*/
+.parent{
+    display: table-cell;
+    vertical-align: middle;
+    text-align:center;
+}
+.child{
+    display: inline-block;
+}
+/*两列定宽，中栏自适应：1*/
+.left{
+    width:100px;
+    float: left;
+}
+.center{
+    width:100%;
+    float: left;
+    margin-right: -200px;
+}
+.right{
+    width:100px;
+    float:right;
+}
+
+
+

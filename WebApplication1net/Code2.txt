@@ -1,0 +1,30 @@
+﻿
+			SysAuditRecord model = this.GetAuditModel();
+			List<SysAuditRecord> list = new List<SysAuditRecord>();
+			var array = model.AuditRecordID.Split(',').Select(Utils.ConvertToInt32).Where(m => m != 0).ToArray();
+			foreach (var item in array)
+			{
+				var t = model.Clone() as SysAuditRecord;
+				t.Primarykey = item;
+				list.Add(t);
+			}
+			msg = bll.Audit(list);
+			HttpRequest Request = context.Request;
+            if (Request.Form.Count > 0)
+            {
+				var ss= Request.Form;
+                string ids = Request.Form["objID"];
+                if (string.IsNullOrWhiteSpace(ids))
+                {
+                    msg.TipCode = "1";
+                    msg.Msg = "操作失败,缺少ID参数！";
+                    this.ResponeMsg(msg);
+                    context.Response.End();
+                    return;
+                }
+              //  var idList = UIHelper.GetSafeSplitInt(ids).Split(',').Select(Utils.ConvertToInt32).ToList();
+              //  var status = (AuditStatus)Utils.ConvertToInt32(Request["auditStatus"]);
+                var attachmentID = Utils.ConvertToString(Request["attachmentID"]);
+                this.payMentBLL.Audit(idList, Request["remark"], attachmentID, status, out msg);
+                this.ResponeMsg(msg);
+            }

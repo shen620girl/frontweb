@@ -1,0 +1,362 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PaymentInfoList.aspx.cs" Inherits="HuiYu.Portal.Equipment.PurchaseManage.PaymentInfoList" %>
+
+<%@ Import Namespace="HuiYu.Entity.Enums" %>
+<%@ Import Namespace="HuiYu.Entity.Equipment.Enums" %>
+<%@ Import Namespace="HuiYu.Common" %>
+<% string t = string.IsNullOrEmpty(Request.QueryString["t"]) ? "1" : Request.QueryString["t"]; %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>医学装备管理系统 v2.0</title>
+    <link type="text/css" rel="stylesheet" href="/css/style.css" />
+    <link type="text/css" rel="stylesheet" href="/css/button.css" />
+    <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/js/commonjs.js"></script>
+    <script type="text/javascript" src="/js/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.artDialog.js?skin=chrome"></script>
+    <script type="text/javascript" src="/js/plugins/iframeTools.js"></script>
+    <script type="text/javascript" src="/js/jquery.autocomplete.js"></script>
+    <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
+
+</head>
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="/main.aspx" title="首页">首页</a></li>
+            <li>付款管理</li>
+            <li>应付款管理</li>
+        </ul>
+    </div>
+    <div class="rightinfo">
+        <div id="usual1" class="usual">
+            <div>
+                <div class="tools">
+                    <ul class="toolbar">
+                        <li onclick="audit();" id="btnAudit">
+                            <span>
+                                <img src="/images/t06.png" alt="" style="width: 24px; height: 24px" title="" />
+                            </span>审核
+                        </li>
+                        <% if (this.Config.IsNeedFinanceConfirm)
+                        { %>
+                        <li onclick="payed();" id="btnPayed">
+                            <span>
+                                <img src="/images/signc.png" alt="" style="width: 24px; height: 24px" title="" />
+                            </span>设置为已付款
+                        </li>
+                        <% } %>
+                    </ul>
+                    <ul class="toolbar1">
+                        <li title="导出设置">导出设置：<label><input type="radio" name="export" value="0" checked="checked" />导出选中</label>&nbsp;&nbsp;<label><input type="radio" name="export" value="1" />导出全部</label></li>
+                        <li title="导出数据" onclick="$.exportData({name:'设备合同付款信息',count:<%=base.Count %>})" class="operatorexport">
+                            <span>
+                                <img src="/images/exportexcel.png" alt="导出数据" title="导出数据" style="width: 24px; height: 24px;" />
+                            </span>导出数据
+                        </li>
+                    </ul>
+                </div>
+                <form class="queryForm" action="#">
+                    <ul class="seachform">
+                        <li>
+                            <label>排序方式</label>
+                            <select class="chosen-60" name="s">
+                                <asp:Repeater ID="rpSort" runat="server">
+                                    <ItemTemplate>
+                                        <option value='<%# Eval("Value") %>' title="<%# Eval(" Text") %>"><%# Eval("Text")%><option>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </select>
+                        </li>
+                        <li>
+                            <label>排序字段</label>
+                            <select class="chosen-100" name="f">
+                                <asp:Repeater ID="rpOrderBy" runat="server">
+                                    <ItemTemplate>
+                                        <option value='<%# Eval("Value") %>' title="<%# Eval(" Text") %>"><%# Eval("Text") %></option>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </select>
+                        </li>
+                        <li>
+                            <label>合同类型</label>
+                            <select class="chosen-150" name="par1">
+                                <option value="">- 请选择 -</option>
+                                <asp:Repeater ID="rpContractType" runat="server">
+                                    <ItemTemplate>
+                                        <option value='<%# Eval("Value") %>' title="<%# Eval(" Text") %>"><%# Eval("Text") %></option>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </select>
+                        </li>
+                        <li>
+                            <label>审核状态</label>
+                            <select class="chosen-150" name="par2">
+                                <option value="">- 请选择 -</option>
+                                <asp:Repeater ID="rpAuditStatus" runat="server">
+                                    <ItemTemplate>
+                                        <option value='<%# Eval("Value") %>' title="<%# Eval(" Text") %>"><%# Eval("Text") %></option>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </select>
+                        </li>
+                        <li>
+                            <label>合同编号</label><input name="par4" type="text" class="scinput" value="" />
+                        </li>
+                        <li>
+                            <label>合同名称</label><input name="par5" type="text" class="scinput" value="" />
+                        </li>
+                        <li>
+                            <label>乙方</label><input name="par6" type="text" class="scinput" value="" />
+                        </li>
+                        <li>
+                            <label>发票号</label><input name="par7" type="text" class="scinput" value="" />
+                        </li>
+                        <li>
+                            <label>&nbsp;</label><input type="button" class="scbtn" title="查询" value="查询"
+                                                        onclick="query(2); return false;" />&nbsp;&nbsp;
+                            <label>&nbsp;</label><input type="button" class="scbtn" title="取消" value="取消"
+                                                        onclick="cancel(); return false;" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div class="itab" style="margin-top: 10px;">
+                <ul>
+                    <li><a href="#tab1" class="selected" rel="1">未付款</a></li>
+                    <li><a href="#tab2" rel="2">已付款</a></li>
+                    <li id="tableTitleInfo">
+                        当前共有
+                        <label class="numStyle"><%=base.Count %></label>条<%=(string.IsNullOrEmpty(Request["t"])||"1".Equals(Request.QueryString["t"]))?"未付款":"已付款" %>信息
+                    </li>
+                </ul>
+            </div>
+            <div id="tab<%=t%>" class="tabson">
+                <table class="tablelist">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input onclick="$.checkall(this, 'table');" type="checkbox" title="全选" />
+                            </th>
+                            <th>序号</th>
+                            <th>乙方</th>
+                            <th>合同编号</th>
+                            <th>合同名称</th>
+                            <th>金额</th>
+                            <th>计划付款日期</th>
+                            <th>付款比例</th>
+                            <th>付款日期</th>
+                            <th>发票号</th>
+                            <th>发票日期</th>
+                            <th>审核凭证/付款凭证</th>
+                            <th>付款状态</th>
+                            <th>审核状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <asp:Repeater ID="rpList" runat="server">
+                            <ItemTemplate>
+                                <tr>
+                                    <td align="center">
+                                        <input name="itemid" type="checkbox" value="<%# Eval(" PaymentID") %>" />
+                                        <input type="hidden" name="CanAudit" value="<%#CanAudit(Eval(" PaymentStatus"),Eval("AuditStatus")) %>" />
+                                        <input type="hidden" name="CanPayment" value="<%#CanPayment(Eval(" PaymentStatus"),Eval("AuditStatus")) %>" />
+                                        <input type="hidden" name="attachmentIds" value="<%#Eval(" AttachmentID") %>" />
+                                    </td>
+                                    <td align="center"><%# Eval("RowIndex") %></td>
+                                    <td style="white-space: nowrap"><%# Eval("Contractor") %></td>
+                                    <td style="white-space: nowrap"><a class="tablelink" href="purchasecontractdetails.aspx?id=<%#Eval(" ContractID") %>"><%# Eval("ContractNumber") %></a></td>
+                                    <td style="white-space: nowrap"><%# Eval("ContractName") %></td>
+                                    <td align="left" style="white-space: nowrap">
+                                        <%#FormatPrice(Eval("PaymentStatus"),Eval("AuditStatus"),Eval("PlanPaymentPrice"),Eval("ActualPaymentPrice")) %>
+                                    </td>
+                                    <td align="center"><%# GetFormateDate(Eval("PlanPaymentDate"))%></td>
+                                    <td align="center"><%# Decimal.Truncate(Utils.ConvertToDecimal(Eval("PaymentRatio")))%>%</td>
+                                    <td align="center"><%# GetFormateDate(Eval("ActualPaymentDate"))%></td>
+                                    <td align="center"><%# Eval("InvoiceNumber") %></td>
+                                    <td align="center"><%# GetFormateDate(Eval("InvoiceDate")) %></td>
+                                    <td align="center"><%# this.AttachmentLink(Eval("AttachmentID"),AttachmentType.设备合同付款凭证) %></td>
+                                    <td align="center"><%# FormatPaymentStatus(Eval("PaymentStatus"))%></td>
+                                    <td align="center"><%# FormatAuditStatus(Eval("AuditStatus"))%></td>
+                                    <td align="center">
+                                        <%#GetLinkBtn(Eval("PaymentStatus"),Eval("AuditStatus"),Eval("PaymentID")) %>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                </table>
+            </div>
+            <div id="tab2" class="tabson">
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <%=UrlPage %>
+        <script type="text/javascript">
+            $(function () {
+                $.initFormByUrl(".queryForm");
+                $.mergeCell({ tbody: ".tablelist", referIndex: 3, cols: [2, 3, 4] });
+                $("#usual1 ul").idTabs();
+                var selectTab = $.getUrlParam("t");
+                selectTab = (selectTab == "" || selectTab == "1") ? "tab1" : "tab" + selectTab;
+                $("a[href*='#" + selectTab + "']").get(0).click();
+                $(".itab a").click(function () {
+                    query();
+                });
+                $("select").change(function () {
+                    query();
+                });
+
+                //文本框查询添加回车事件
+                $(".seachform").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        query();
+                    }
+                });
+            })
+
+            //查询
+            function query() {
+                if (haspermission('btnQuery')) {
+                    var url = "paymentinfolist.aspx";
+                    $.RedirectURL(getCurrentUrlByUrl(url));
+                }
+            }
+
+            //格式化Url参数
+            function getCurrentUrlByUrl(url) {
+                var otherJson = { t: $("#usual1 a.selected").attr("rel") };
+                var postData = $.getSubmitData(".queryForm", otherJson);
+                url = url + (url.indexOf('?') > 0 ? "&" : "?") + postData;
+                return url;
+            }
+
+            //取消查询
+            function cancel() {
+                var rel = $("#usual1 ul").find("a[class='selected']").attr("rel");
+                $.RedirectURL("PaymentInfoList.aspx?t=" + rel);
+            }
+
+            //付款申请
+            function applyPay(id) {
+                $.dialog.open("balance.aspx?id=" + id + "", {
+                    width: 600,
+                    height: $(window).height() * 0.7,
+                    fixed: true,
+                    title: "付款申请"
+                }, false).lock();
+            }
+
+            //审核
+            function audit(id) {
+                if (haspermission('btnAudit')) {
+                    flag = true;
+                    var ckArray = [];
+                    var $ckb = $('input[name="itemid"]:checked');
+                    //批量审核
+                    if (id == null) {
+                        $ckb.each(function (index) {
+                            if (flag) {
+                                if ($(this).parent().find("input[name=CanAudit]").val() == "False") {
+                                    flag = false;
+                                    return $.dialog.alert("您选择的记录里面有未满足审核条件的记录行，无法审核！");
+                                }
+                                ckArray.push($(this).val());
+                            }
+                        });
+                        if (!flag) return;
+                        if (ckArray.length == 0) {
+                            $.dialog.alert("请选择您要审核的记录行"); return;
+                        }
+                    }
+
+                    var originalAtt = $ckb.length == 1 ? $ckb.closest('tr').find("input[name=attachmentIds]").val() : "";
+                    $.auditSB({
+                        title: "设备合同付款审核",
+                        name: "付款审核",
+                        auditData: id != null ? id : ckArray.join(','),
+                        originalAtt:originalAtt,
+                        action:"audit",
+                        require: false,
+                        attachType:<%=(int)AttachmentType.设备合同付款审核凭证%>,
+                        //result: 1,
+                        auditUrl: "/services/equipment/SbContractPaymentServices.ashx",
+                        success: function() {
+                            $.RedirectURL("/equipment/purchasemanage/PaymentInfoList.aspx");
+                        }
+                    })
+                }
+            }
+
+
+            //标记已付款
+            function payed(id) {
+                if (haspermission('btnEdit')) {
+                    flag = true;
+                    var ckArray = [];
+                    //批量标记
+                    if (id == null) {
+                        $('input[name="itemid"]:checked').each(function (index) {
+                            if (flag) {
+                                if ($(this).parent().find("input[name=CanPayment]").val() == "False") {
+                                    flag = false;
+                                    return $.dialog.alert("您选择的记录里面有未满足标记条件的记录行，无法标记！");
+                                }
+                                ckArray.push($(this).val());
+                            }
+                        });
+                        if (!flag) return;
+                        if (ckArray.length == 0) {
+                            $.dialog.alert("请选择您要标记的记录行"); return;
+                        }
+                    }
+
+                    $.ajax({
+                        type: "post",
+                        url: "/services/Equipment/SbContractPaymentServices.ashx",
+                        data: {
+                            id: id != null ? id : ckArray.join(','),
+                            action: "endPayment"
+                        },
+                        dataType: "json",
+                        error: function () { $.dialog.alert("请求失败，请刷新页面重试！"); },
+                        success: function (msg) {
+                            $.dialog.alert(msg.Msg, function () {
+                                var n = $("#usual1 .selected").attr("rel");
+                                window.location.reload(true);
+                            });
+                        }
+                    });
+                }
+            }
+
+            //上传付款凭证
+            function uploadAttachment(obj,id){
+                container=$(obj).closest('tr').find('input[name=attachmentIds]');
+                $.uploadAttachments1({attachType: <%=(int)AttachmentType.设备合同付款凭证%>, container: container, title: '上传设备合同付款凭证',call:function(){
+                    var data = $.dialog.data("AttachmentID");
+                    if(data){
+                        $.ajax({
+                            type: "post",
+                            url: "/services/Equipment/SbContractPaymentServices.ashx",
+                            data: {
+                                id:id,
+                                attachments:data,
+                                action: "saveAttachments"
+                            },
+                            dataType: "json",
+                            error: function () { $.dialog.alert("请求失败，请刷新页面重试！"); },
+                            success: function (msg) {
+                                window.location.reload(true);
+                            }
+                        });
+                    }
+                }});
+            }
+        </script>
+    </div>
+</body>
+</html>

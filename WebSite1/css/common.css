@@ -1,0 +1,33 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    height:100%;
+}
+
+/* */
+#hos_par .left{
+    width:100px;
+    background-color: blanchedalmond;
+}
+#hos_par .center{
+    background-color: darkslateblue;
+}
+#hos_par .right{
+    width:100px;
+    background-color: chocolate;
+}
+#hos_par>div{
+    height: 100%;
+    display: table-cell;
+}
+#hos_par{
+    width:100%;
+    height: 100%;
+    display: table;
+    table-layout: fixed;
+    position:fixed;
+}
