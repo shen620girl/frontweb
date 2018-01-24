@@ -54,25 +54,15 @@ module.exports = function(grunt) {
             }
         },
         jshint:{
-            backend: {
-                options: {
-                    jshintrc: '.jshintrc'
-                },
-                all: [
-                    'Gruntfile.js',
-                    'server.js',
-                    '*.js',
-                    'backend/{,*/}*.js'
-                ]
-            },
-            test: {
-                options: {
-                    jshintrc: 'test.jshintrc'
-                },
-                all: [
-                    'test/{,*/}*.js'
-                ]
+            all: [
+                'js/*.js'
+            ],
+            options: {
+                browser: true,            // browser environment
+                devel: true                //
             }
+
+
         },
         connect: {
             options: {

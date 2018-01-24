@@ -4,5 +4,5 @@ function   ds() {
 }
 function  ff(){
     var dd=345;
-    console.log('sdfsdf')
+    console.log('sdfsdf');
 }

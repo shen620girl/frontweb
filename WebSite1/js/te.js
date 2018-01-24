@@ -1,0 +1,2 @@
+[{"InvoiceAmount":"3242","PrePayTime":"2018-01-02","InvoiceNumber":"ere","Remark":"gfdd","PayStage":"3","AttachmentID":""},{"InvoiceAmount":"2091","PrePayTime":"2018-01-08","InvoiceNumber":"34gf","Remark":"rt","PayStage":"65","AttachmentID":""}]
+"../load/loadstoragein.aspx?BillingStatus=(" +1,2+")",

@@ -1,0 +1,547 @@
+
+RK201801004
+
+$.ajax({
+								type: "post",
+								url: "/services/equipment/sbinvoiceservices.ashx",
+								data: { action: "getByStorageNumber", data: accepmodel.BusinessNumber },
+								dataType: "json",
+								beforeSend: function () { layer.load('加载数据中，请稍侯...'); },
+								error: function () { $.dialog.alert("请求失败，请刷新页面重试！"); },
+								success: function (msg) {
+									layer.closeAll();
+									var dd = msg.DetailsList;
+									$.inintForm({ jsonList: msg.DetailsList, c: "#tab", append: false });
+
+
+
+
+								}
+							});
+
+$("#InvoiceAllAmount")
+
+ and BillingStatus in (1,2)  and AuditStatus = 8 and exists(select * from SB_Stock B where v_SB_StorageInDetails.DetailsID = B.StorageDetailsID and b.UsableQuantity > 0) and AccountWay=1
+			//if (model.StorageAmount < model.InvoiceAmount)
+			//{
+			//	msg.Msg = $"您填写的发票总金额不能大于入库单的总金额：{model.StorageAmount}！";
+			//	return msg;
+			//}
+			//if (model.FlushAamount > 0)//冲账金额大于0
+			//{
+
+			//    if (model.BalanceDetailsList == null || model.BalanceDetailsList.Count == 0)
+			//    {
+			//        msg.Msg = $"请引入或填写冲账明细！";
+			//        return msg;
+			//    }
+			//    int b = 1;
+			//    decimal FlushAamount = 0;
+			//    int[] returnID = model.BalanceDetailsList.Select(p => p.ReturnID).ToArray();
+			//    string strID = string.Join(",", returnID);
+			//    //查找退货单是否已录入过
+			//    List<SbInvoiceBalanceDetails> blist = sbBalanceInvoiceDetails.GetListModel(strID);
+			//    foreach (var balanceDetails in model.BalanceDetailsList)
+			//    {
+			//        SbReturnStorage sbReturnStorage = new SbReturnStorageBusiness().GetModel(balanceDetails.ReturnID);
+			//        if (sbReturnStorage == null)
+			//        {
+			//            msg.Msg = $"第{b}行的退货单无效！";
+			//            return msg;
+			//        }
+
+			付款状态为{sqlmodel.PayStatus},不能改为已付款
+
+			//        var bs = blist.Where(p => p.ReturnID == balanceDetails.ReturnID).FirstOrDefault();
+			//        if (bs != null)
+			//        {
+			//            if (action == ActionType.新增)
+			//            {
+			//                msg.Msg = $"第{b}行的退货单{sbReturnStorage.BusinessNumber}已冲账，不能再进行冲账！";
+			//                return msg;
+			//            }
+			//            if (action == ActionType.编辑 && bs.InvoiceID != model.InvoiceID)
+			//            {
+			//                msg.Msg = $"第{b}行的退货单{sbReturnStorage.BusinessNumber}已冲账，不能再进行冲账！";
+			//                return msg;
+			//            }
+			//        }
+			//        balanceDetails.ReturnAmount = sbReturnStorage.DetailsList.Sum(p => p.Price * p.ReturnNum);
+			//        balanceDetails.FlushAmount = balanceDetails.ReturnAmount;
+			//        FlushAamount += balanceDetails.FlushAmount;
+			//        b++;
+			//    }
+
+			//    if (model.FlushAamount > FlushAamount)
+			//    {
+			//        msg.Msg = $"填写的冲账总金额不能大于您选择的退货单总金额！";
+			//        return msg;
+			//    }
+			//}
+			//model.PayAmount = model.InvoiceAmount - model.FlushAamount;
+
+
+ var t = (Request.QueryString["ids"] + "").Split(',').Select(Utils.ConvertToInt32).Where(m => m > 0).ToArray();
+{"SourceTable":"设备发票视图","AuditRecordID":"12","FlowIDs":"","Record":"aSD","Status2":"8","AuditSignUrl":""}
+
+select SUM(A.ShouldFlushAmount)-SUM(B.FlushAamount) 剩余可冲 ,A.SupplierID from SB_Invoice A,SB_Invoice B
+  where  B.PayStatus not in(1,3)
+  group by A.SupplierID
+	$('#tab input[name=InvoiceAmount]').each(function () {
+
+				$(this).keyup(function () {
+					reg = new RegExp("^[0-9]+\.{0,1}[0-9]{0,8}$");
+
+					//发票总金额元素
+					var invoiceAE = $('#totalInvoiceAmount');
+					if (reg.test($(this).val())) {
+						var totalAcu = 0;
+						$('#tab input[name=InvoiceAmount]').each(function () {
+							totalAcu += parseFloat($(this).val());
+						});
+						invoiceAE.val(totalAcu.toFixed(2));
+					}
+					else
+						invoiceAE.val("");
+
+
+				});
+			});
+
+
+/// 设备发票付款状态
+	/// </summary>
+	public enum SbInvoicePaymentStatus
+	{
+
+		/// <summary>
+		/// 未处理
+		/// </summary>
+		[Description("未处理")]
+		[Color("gray")]
+		未处理 = 1,
+
+		/// <summary>
+		/// 已提交付款请求了
+		/// </summary>
+		[Description("已请求付款")]
+		[Color("gray")]
+		已请求付款 = 2,
+		/// <summary>
+		/// 付款失败  付款审核失败
+		/// </summary>
+		[Description("付款审核失败")]
+		[Color("red")]
+		付款审核失败 = 3,
+		/// <summary>
+		/// 待付款 提交了付款请求了
+		/// </summary>
+		[Description("付款审核成功")]
+		[Color("gray")]
+		付款审核成功= 4,
+		/// <summary>
+		/// 已付款
+		/// </summary>
+		[Description("已付款")]
+		[Color("green")]
+		已付款 = 5
+
+
+
+	}
+	// $.viewDetails("invoicedetails.aspx?id=" + id, "查看合同信息");
+
+			//if (haspermission('btnView')) {
+			//	$.dialog.open("invoicedetails.aspx?id=" + id, {
+			//		width: 800,
+			//		height: 260,
+			//		title: "发票明细",
+			//		close: function () {
+			//			var data = $.dialog.data("success");
+			//			if (data == null || data == undefined) return;
+			//			location.href = location.href;
+			//		}
+			//	}, false).lock();
+
+
+   //         }
+
+
+
+Log.LogDes = "删除设备入库单记录，入库单号为：" + model.BusinessNumber;
+
+ /// <summary>
+ 		/// 根据供应商ID获取退货金额
+ 		/// </summary>
+ 		/// <param name="context"></param>
+
+ 		private void GetReturnAmount(HttpContext context)
+ 		{
+ 			HttpRequest Request = context.Request;
+ 			HttpResponse Response = HttpContext.Current.Response;
+ 		//	var modelStorageIn = new SbStorageInBusiness().GetModelByStorageNumber(Request.Form["data"]);
+ 			//var acceptModel = new SbAcceptanceBusiness().GetModel(modelStorageIn.AcceptanceID);
+ 		//	base.ResponeJson(acceptModel);
+ 		}
+
+
+ DbCommand cmd = db.GetStoredProcCommond("sp_Common_Page");
+            db.AddInParameter(cmd, "@tblName", DbType.String, tableName);
+            db.AddInParameter(cmd, "@fldName", DbType.String, "*");
+            db.AddInParameter(cmd, "@pageSize", DbType.Int32, pageSize);
+            db.AddInParameter(cmd, "@page", DbType.Int32, pageIndex);
+            db.AddInParameter(cmd, "@fldSort", DbType.String, fldSort);
+            db.AddInParameter(cmd, "@sort", DbType.Int32, sort);
+            db.AddInParameter(cmd, "@strWhere", DbType.String, strWhere);
+            db.AddOutParameter(cmd, "@totalPage", DbType.Int32, 0);
+            db.AddOutParameter(cmd, "@counts", DbType.Int32, 0);
+            DataTable ds = db.ExecuteDataTable(cmd);
+            totalPage = Convert.ToInt32(db.GetParameter(cmd, "@totalPage").Value);
+            count = Convert.ToInt32(db.GetParameter(cmd, "@counts").Value);
+
+
+ string sql = "select top 1 * from SB_InvoiceBalanceDetails where [Status]=1 and InvoiceID=@in_InvoiceID";
+                DbCommand cmd = db.GetSqlStringCommond(sql);
+                db.AddInParameter(cmd, "@in_InvoiceID", DbType.Int32, invoiceID);
+                List<SbInvoiceBalanceDetails> list = new List<SbInvoiceBalanceDetails>();
+                using (DbDataReader dr = db.ExecuteReader(cmd))
+                {
+                    while (dr.Read())
+                    {
+                        SbInvoiceBalanceDetails model = BuildModel(dr);
+                        list.Add(model);
+                    }
+                }
+                return list;
+
+
+                   private void Add(SbArchives model, OperationLog log, Trans t)
+                        {
+                            try
+                            {
+                                DbCommand cmd = db.GetStoredProcCommond(strAdd);
+                                db.AddReturnParameter(cmd, "@identityID", DbType.Int32);
+                                BuildCommand(ref cmd, model, log);
+                                db.ExecuteNonQuery(cmd, t);
+                                model.ArchivesID = Convert.ToInt32(cmd.Parameters["@identityID"].Value);
+                            }
+                            catch (SqlException ex)
+                            {
+                                throw ex;
+                            }
+                        }
+
+    db.AddInParameter(cmd, "@in_ArchiveType", DbType.Int32, model.ArchiveType);
+               db.AddInParameter(cmd, "@in_BusinessNumber", DbType.String, model.BusinessNumber);
+               db.AddInParameter(cmd, "@in_AttachmentID", DbType.String, model.AttachmentID);
+               db.AddInParameter(cmd, "@in_ArchivesUser", DbType.String, model.ArchivesUser);
+               db.AddInParameter(cmd, "@in_ArchivesTime", DbType.DateTime, model.ArchivesTime);
+
+                       //查看维修处理情况
+                       function viewSituation(id, obj) {
+                           $.ajax({
+                               type: "post",
+                               url: "/services/equipment/sbrepairprocessservices.ashx",
+                               data: { action: "GetProcessList", id: id },
+                               dataType: "json",
+                               async: false,
+                               success: function (msg) {
+                                   var html = template("tpl", msg);
+                                   layer.tips(html, obj, {
+                                       guide: 1,
+                                       maxWidth: parseInt($(obj).offset().left) * 0.8 + "",
+                                       closeBtn: [0, true],
+                                       area: ['250px', 'auto'],
+                                       style: ['background-color:#00adee; color:#fff', '#00adee'],
+                                       time: 3000
+                                   });
+                               }
+                           });
+
+                       }
+
+                       lastUsableAmount  totalUsableAmount
+
+
+  this.ResponeJson(new
+            {
+                list = list
+            })
+
+
+  <script id="tpl" type="text/html">
+        <table class="tipTable">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th style="width: 8%">维修方式</th>
+                    <th style="width: 10%">工程师</th>
+                    <th style="width: 10%">联系电话</th>
+                    <th style="width: 100px">维修时间</th>
+                    <th>维修记录</th>
+                    <% if (!(t == 4 || t == 5) && this.LoginUser.IsEngineer)
+                        {%>
+                    <th style="width: 70px">操作</th>
+                    <%} %>
+                </tr>
+            </thead>
+            <tbody>
+                {{each list as value i}}
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td>{{value.MaintenanceType}}</td>
+                    <td>{{value.MaintenanceEngineer}}</td>
+                    <td>{{value.EngineerPhone}}</td>
+                    <td>起：{{value.MaintenanceStartDate1}}<br />
+                        止：{{value.MaintenanceEndDate1}}</td>
+                    <td>{{value.MaintenanceSituation}}</td>
+                    <% if (!(t == 4 || t == 5) && this.LoginUser.IsEngineer)
+                        {%><td><a style="color: white" href="###" onclick="editProcess({{value.ProcessID}})">编辑</a>&nbsp;&nbsp;<a style="color: white" href="###" onclick="deleteProcess({{value.ProcessID}},this)">删除</a></td>
+                    <%} %>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+
+
+onmouseout="closeTip(this)"
+
+
+  function viewDescription(obj) { layer.tips($(obj).next().html(),
+  obj, { guide: 2, maxWidth: "350", area: ['150px', 'auto'], style: ['background-color:#00adee; color:#fff', '#00adee'], time: 3000 }); }
+
+付款状态 0：未处理 1：待付款  2：付款失败 4：已付款
+
+html	"<div>\r\n\t\t\t\t<p><label>上次剩余的可冲账金额： </label>0</p>\r\n\t\t\t
+<table class=\"tipTable\">\r\n\t\t\t\t<thead>\r\n\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t<th>序号</th>\r\n\t\t\t\t\t\t<th >退货单ID</th>\r\n\t\t\t\t\t\t<th >退货金额</th>\r\n\t\t\t\t\t</tr>\r\n\t\t\t\t</thead>\r\n\t\t\t\t<tbody>\r\n\t\t\t\t\t\r\n
+        </tbody>\r\n\t\t\t</table>\r\n\t\t\t\t<p><label>本次可冲账总金额： </label>0</p>\r\n\t\t\t\t</div>"
+
+
+
+
+SbInvoicePaymentStatus
+
+
+
+						$.ajax({
+							type: "post",
+							url: "../services/equipment/sbinvoiceservices.ashx",
+							data: model,
+							dataType: "json",
+							error: function () { $.dialog.alert("请求失败，请刷新页面重试！"); },
+							success: function (msg) {
+								$.dialog.close();
+								if (msg.TipCode == 0) {
+									//$.dialog.close();
+									$.dialog.alert("操作成功", function () {
+										win = art.dialog.open.origin;
+										win.location.reload();
+									});
+								} else {
+									$.dialog.alert(msg.Msg);
+								}
+							}
+						});
+
+The request body did not contain the specified number of bytes. Got 0, expected 99
+
+
+
+					$.ajax({
+						type: "post",
+						url: "/services/equipment/SbInvoiceservices.ashx",
+						data: model,
+						dataType: "json",
+						beforeSend: function () { layer.load('加载数据中，请稍侯...'); },
+						error: function () { $.dialog.alert("请求失败，请刷新页面重试！"); },
+						success: function (msg) {
+							layer.closeAll();
+							$.dialog.alert(msg.Msg, function () {
+								location.reload();
+							});
+						}
+					});
+
+
+[{"InvoiceID":"11"},{"InvoiceID":"12"}]
+						$.ajax({
+                    					type: "post",
+                    					url: "/services/equipment/SbInvoiceservices.ashx",
+                    					data: { action: "getReturnAmount", id: supplyierId },
+                    					dataType: "json",
+                    					async: false,
+                    					success: function (msg) {
+                    						var html = template("tpl", msg);
+                    						layer.tips(html, obj, {
+                    							guide: 1,
+                    							maxWidth: parseInt($(obj).offset().left) * 0.8 + "",
+                    							closeBtn: [0, true],
+                    							area: ['250px', 'auto'],
+                    							style: ['background-color:#00adee; color:#fff', '#00adee'],
+                    							time: 3000
+                    						});
+                    					}
+                    				});
+
+                    				var models=	Utils.Deserialize<IList<SbInvoice>>(context.Request["list"]);
+                                    		   var groupsby=models.GroupBy(m => m.SupplierID);
+                                    			var results = groupsby.Select(x => new
+                                    			{
+                                    				Key = x.Key,
+                                    				Name = x.First().SupplierName,
+                                    				Totalflush = x.Sum(s => s.FlushAamount)
+                                    			});
+                                    			foreach (var item in results)
+                                    			{
+                                    				var itemmodel = GetTotalUsableFlush(item.Key);
+
+                                    				if (item.Totalflush > itemmodel.TotalFlushAmount)
+                                    				{
+                                    					msg.Msg = string.Format("冲账总金额超出可用金额,要冲账的金额{0},可用的冲账金额{1},供应商{2}", item.Totalflush, itemmodel.TotalFlushAmount, itemmodel.SupplyierName);
+                                    				}
+                                    			}
+
+
+[{"InvoiceAmount":"34567.2200","InvoiceID":"11","StorageAmount":"34567.0000","FlushAamount":"432","SupplierID":"133","PayAmount":"34135.22"},
+{"InvoiceAmount":"564134.0000","InvoiceID":"9","StorageAmount":"567.0000","FlushAamount":"0.0000","SupplierID":"457","PayAmount":"564134.0000"}]
+
+[{"InvoiceAmount":"34567.2200","InvoiceID":"11","StorageAmount":"34567.0000","FlushAamount":"0.0000","SupplierID":"133","PayAmount":"1.0000","SupplierName":"枫竹伟业(北京)医疗设备有限公司"},
+{"InvoiceAmount":"5678.0000","InvoiceID":"12","StorageAmount":"5678.0000","FlushAamount":"0.0000","SupplierID":"457","PayAmount":"5678.0000","SupplierName":"合肥新站区二维电子器材经销部"}]
+
+
+[{"InvoiceAmount":"34567.2200","InvoiceID":"11","StorageAmount":"34567.0000","FlushAamount":"453","SupplierID":"133","PayAmount":"34114.22"},
+{"InvoiceAmount":"5678.0000","InvoiceID":"12","StorageAmount":"5678.0000","FlushAamount":"567","SupplierID":"457","PayAmount":"5111.00"},
+{"InvoiceAmount":"564134.0000","InvoiceID":"9","StorageAmount":"567.0000","FlushAamount":"453","PayAmount":"563681.00"}]
+
+
+
+			List<SbInvoice> list = new List<SbInvoice>();
+			var models = Utils.Deserialize<IList<SbInvoice>>(context.Request["list"]);
+
+
+				var sqlmodel = bll.GetModel(item.InvoiceID);
+
+			sqlmodel.PayStatus = SbInvoicePaymentStatus.待付款;
+
+			  public enum AuditStatus
+                {
+                    /// <summary>
+                    /// 待审核
+                    /// </summary>
+                    [Description("待审核")]
+                    待审核 = 1,
+
+                    /// <summary>
+                    /// 审核中
+                    /// </summary>
+                    [Description("审核中")]
+                    [Color("gray")]
+                    审核中 = 2,
+
+                    /// <summary>
+                    /// 审核失败
+                    /// </summary>
+                    [Description("审核未通过")]
+                    [Color("red")]
+                    审核失败 = 4,
+
+                    /// <summary>
+                    /// 审核成功
+                    /// </summary>
+                    [Description("审核通过")]
+                    [Color("green")]
+                    审核成功 = 8
+                }
+
+                   <% if (t != 0) {%> <th>操作</th><%} %>
+
+                   <select class="chosen-150" name="PayStatus" onchange="query()">
+                   			<option value="-1">- 请选择 -</option>
+                   			<option value='0' title="未处理">未处理</option>
+                   			<option value='1' title="待付款">待付款</option>
+                   			<option value='2' title="付款失败">付款失败</option>
+                   			<option value='3' title="付款审核成功">付款审核成功</option>
+                   			<option value='4' title="已付款">已付款</option>
+                   		</select>
+  {"SourceTable":"v_SB_ContractPayment","AuditRecordID":"13,12,11,9","FlowIDs":",,,","Record":"sadfs","Status2":"8","AuditSignUrl":""}
+
+
+[{"InvoiceNumber":"232ddd","PrePayTime":"2018-01-12","InvoiceAmount":"556.00","PayStage":"3"},
+{"InvoiceNumber":"453","PrePayTime":"2018-01-17","InvoiceAmount":"567.00","PayStage":"333"},
+{"InvoiceNumber":"","PrePayTime":"","InvoiceAmount":"","PayStage":""}]
+
+
+, '开票状态:1未开票 2开部分票 4开票完毕'
+
+
+ /// <summary>
+        /// 处理消息状态修改
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void context_PreSendRequestHeaders(object sender, EventArgs e)
+        {
+            HttpApplication application = (HttpApplication)sender;
+            if (application.Context.Request.QueryString["msgid"] != null)
+            {
+                string msgid = application.Context.Request.QueryString["msgid"];
+                //修改提示状态为“已提示”
+                MessageBll.UpdateTipStatus(msgid);
+                //修改消息接收者表1.处理状态为“已读” 2.查看时间
+                MessageBll.UpdateProcessStatus(Convert.ToInt32(msgid), HuiYu.Common.Utils.ConvertToInt32(MessageBll.LoginUser.UserID));
+                //更新top页面消息数
+                application.Context.Response.Write("<script>top.window.frames.topFrame.location.href = '/top.aspx';</script>");
+            }
+        }
+
+            backend: {
+                        options: {
+                            jshintrc: '.jshintrc'
+                        },
+                        all: [
+                            'Gruntfile.js',
+                            'server.js',
+                            'js/*.js',
+                            'backend/{,*/}*.js'
+                        ]
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
