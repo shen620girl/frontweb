@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Agw>
+  <Head direction="request">
+    <transCode>DSEC0001</transCode>
+    <reqSeriaNo>20002017082900000001</reqSeriaNo>
+    <tradeTime>20170829121212</tradeTime>
+    <tradeDescription>第三方提现</tradeDescription>
+    <channel>20</channel>
+    <macaddr>D506DD06-9E9A-4F82-A07F-4FDB043763E6</macaddr>
+    <netaddr>netaddr</netaddr>
+    <platformCode>2000</platformCode>
+  </Head>
+  <Body>
+    <accountNo>14050000000383331</accountNo>
+    <cardNo>6217921787498123</cardNo>
+    <transAmt>100</transAmt>
+    <custName>牛秀</custName>
+    <summary>第三方提现</summary>
+    <isCheckPwd>1</isCheckPwd>
+    <transPwd>1234567890987654321</transPwd>
+  </Body>
+</Agw>

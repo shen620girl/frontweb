@@ -1,0 +1,6 @@
+    1 敏感信息，不能访问接口 request.form 可能存在危险
+	     关键点 web.config   <httpRuntime targetFramework="4.5" requestValidationMode="2.0"/>
+		 在节点：httpRuntime添加  requestValidationMode="2.0"
+
+   2 web api的特性路由要有效
+         需要在Application_Start   添加 GlobalConfiguration.Configuration.MapHttpAttributeRoutes();（如果同时有mvc和webapi）
